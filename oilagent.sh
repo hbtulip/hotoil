@@ -67,8 +67,7 @@ function startup4war()
 #基于可执行的jar包
 function startup4jar() 
 {
-	appjar = $project_warpath/$project_name.jar
-	PID=$(ps -ef | grep $appjar | grep -v grep | awk '{ print $2 }')
+	PID=$(ps -ef | grep $project_name | grep -v grep | awk '{ print $2 }')
  
 	#判断PID是否为空，停止进程
 	if [ -z "$PID" ]; then
@@ -78,7 +77,8 @@ function startup4jar()
 	fi
 	
 	#启动进程
-	nohup java -jar $project_warpath/$project_name.jar > app.log 2>&1 &
+	appjar = $project_warpath/$project_name.jar
+	nohup java -jar $appjar > app.log 2>&1 &
 	
 	return 0
 }
@@ -90,6 +90,7 @@ function startup4docker()
 
 	#判断container_id是否为空，删除容器
 	if [ "$container_id" ]; then
+		docker stop $container_id		
 		docker rm -f  $container_id
 	fi
 
